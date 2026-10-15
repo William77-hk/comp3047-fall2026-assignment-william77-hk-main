@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+</head>
+
+<body>
+<header class="top-row site-header">
+    <nav class="navbar navbar-expand navbar-dark container" aria-label="Main navigation">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+        <img src="https://www.siloon.com/uploads/ueditor/20210204/2-2102041I40W30.png" alt="" width="28" height="28">
+        <span>SciFac Events</span>
+      </a>
+      <div class="navbar-nav ms-auto">
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/events">Events</a>
+        <a class="nav-link" href="/venues">Venues</a>
+      </div>
+    </nav>
+  </header>
+    <main class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h4 class="content d-flex align-items-center">Edit Event
+                    <button type="submit" form="deleteEventForm" class="btn btn-danger ms-auto">
+                                <i class="bi bi-trash me-1"></i> Delete</button>
+                </h4>
+                <form class="card shadow-sm" action="/event/<%= event._id %>" method="POST">
+                    <div class="card body">
+                        <div class="mb-3">
+                            <label for="title" class="col-form-label">Title</label>
+                            <input type="text" name="title" id="title" class="form-control" value="<%= event.title %>"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="col-form-label">Description</label>
+                            <textarea name="description" id="description"
+                                class="form-control"><%= event.description %></textarea>
+                        </div>
+                        <div class=" mb-3">
+                            <label for="category" class="col-form-label">Category</label>
+                            <select class="form-select" name="category" id="category" required>
+                                <option value="<%= event.category %>">
+                                    <%= event.category %>
+                                </option>
+                                <option value="">Select a category</option>
+                                <option value="Workshop">Workshop</option>
+                                <option value="Seminar">Seminar</option>
+                                <option value="Competition">Competition</option>
+                                <option value="Career Event">Career Event</option>
+                                <option value="Social Event">Social Event</option>
+                                <option value="Conference">Conference</option>
+                                <option value="Lecture">Lecture</option>
+                                <option value="Exhibition">Exhibition</option>
+                                <option value="Cultural">Cultural</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Volunteer">Volunteer</option>
+                                <option value="Networking">Networking</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="date" class="col-form-label">Date & Time</label>
+                            <input type="datetime-local" name="date" id="date" class="form-control"
+                                value="<%= event.date %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="speaker" class="col-form-label">Speaker/Organizer</label>
+                            <input type="text" name="speaker" id="speaker" class="form-control"
+                                value="<%= event.speaker %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="capacity" class="col-form-label">Capacity</label>
+                            <input type="number" name="capacity" id="capacity" class="form-control"
+                                value="<%= event.capacity %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="venue" class="col-form-label">Venue</label>
+                            <select class="form-select" name="venue" id="venue" required>
+                                <% if (currentVenue) { %>
+                                    <option value="<%= currentVenue._id %>" selected>
+                                        <%= currentVenue.name %>
+                                    </option>
+                                <% } else { %>
+                                    <option value="">Select a venue</option>
+                                <% } %>
+                                <% venues.forEach(function(venue) { %>
+                                    <% if (!currentVenue || venue._id.toString() !== currentVenue._id.toString()) { %>
+                                        <option value="<%= venue._id %>">
+                                            <%= venue.name %>
+                                        </option>
+                                    <% } %>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="status" class="col-form-label">Status</label>
+                            <select class="form-select" name="status" id="status">
+                                <option value="<%= event.status %>">
+                                    <%= event.status %>
+                                </option>
+                                <option value="">Select a status</option>
+                                <option value="Upcoming">Upcoming</option>
+                                <option value="Ongoing">Ongoing</option>
+                                <option value="Completed">Completed</option>
+                                <option value="Cancelled">Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="bannerImage" class="col-form-label">Banner Image URL</label>
+                            <input type="text" name="bannerImage" id="bannerImage" class="form-control"
+                                value="<%= event.bannerImage %>">
+                        </div>
+                        <div class="mb-3">
+                            <input type="checkbox" name="isHighlighted" id="isHighlighted" class="form-check-input"
+                                <%=event.isHighlighted ? 'checked' : '' %>>
+                            <label for="isHighlighted" class="form-check-label">Highlight on Homepage Carousel</label>
+                        </div>
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">Save Event</button>
+                            <a href="/" class="btn btn-secondary">Cancel</a>
+                        </div>
+                </form>
+                <form id="deleteEventForm" action="/event/delete/<%= event._id %>" method="POST"
+                    onsubmit="return confirm('Are you sure you want to delete this event?');">
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="last-row">
+        <p>&copy; 2026 Science Faculty Event Management System. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
